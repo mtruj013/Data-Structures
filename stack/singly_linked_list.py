@@ -9,7 +9,6 @@ class LinkedList:
         self.tail = None
         self.length = 0
 
-
 # append / add ---> add_to_tail
     def add_to_tail(self, value):
         # check if theres a tail
@@ -45,8 +44,6 @@ class LinkedList:
         if self.head == self.tail:
         #   Set self.head to current_head.next (which is also none)
             current_head = self.head
-            self.head = current_head.next
-            
         #   set self.tail to None
             self.tail = None
         #   Decrement length by 1
@@ -84,16 +81,21 @@ class LinkedList:
         else:
         # dtart at head and iterate to the next -to-last node
             current_node = self.head
+
         # stop when the current_node.next == self.tail
-            while current_node.next is not self.tail:
-                current_node = current_node.next
+            while(current_node.next != self.tail):
+                self.head = current_node.next
+            
+
         # save the current_tail value
-            current_tail = self.tail.value
+            current_tail = current_node.value
 
             # set self.tail to cuurent_node
             self.tail = current_node
 
             # set current_node.next to None
             current_node.next = None
+
+            return current_tail
             
 
