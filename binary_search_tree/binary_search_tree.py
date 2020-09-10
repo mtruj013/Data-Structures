@@ -41,19 +41,40 @@ class BSTNode:
             # otherwise
             else:
                 # call insert on the root's right node
-                self.right.insert(new_node.value)
-                
-
+                self.right.insert(new_node.value)             
         # other / base case (no need b/c I used recurssion)
   
-
-
-
 
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
-        pass
+        
+        # is the tree empty?
+        if not self.value:
+            return False
+        #check if target is the root value
+        elif self.value == target:
+            return True
+        # check if its on the left
+        elif self.value > target:
+            # is the left node empty
+            if not self.left:
+                return False
+            elif self.left.value == target:
+                return True
+            else:
+                self.left.contains(target)
+        
+        # check the right side 
+        else:
+            if not self.right:
+                return False
+            elif self.right.value == target:
+                return True
+            else: self.right.contains(target)
+
+
+
 
     # Return the maximum value found in the tree
     def get_max(self):
