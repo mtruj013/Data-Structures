@@ -7,6 +7,12 @@ class ListNode:
         self.prev = prev
         self.value = value
         self.next = next
+    
+    def delete(self):
+        if self.prev:
+            self.prev.next = self.next
+        if self.next:
+            self.next.prev = self.prev
             
 """
 Our doubly-linked list class. It holds references to 
@@ -29,15 +35,15 @@ class DoublyLinkedList:
     def add_to_head(self, value):
         # convert user val into node
 
+        new_node = ListNode(value, None)
         #if its empty
         if not self.head:
-            new_node = ListNode(value, None)
             self.head = new_node
             self.tail = new_node
         else:
-            new_node = ListNode(value, None)
             old_head = self.head
             new_node.next = old_head
+            self.head.prev = new_node 
 
             self.head = new_node
         self.length += 1
@@ -73,16 +79,18 @@ class DoublyLinkedList:
     the old tail node's next pointer accordingly.
     """
     def add_to_tail(self, value):
+
+        new_node = ListNode(value, None)
+
         #if its empty
-        if not self.tail:
-            new_node = ListNode(value, None)
+        if not self.head and not self.tail:
             self.tail = new_node
             self.head = new_node
         #if there is a tail
         else:
-            new_node = ListNode(value, None)
             old_tail = self.tail
             new_node.prev = old_tail
+            self.tail.next = new_node
 
             self.tail = new_node
         self.length += 1
@@ -126,14 +134,7 @@ class DoublyLinkedList:
         
         value = node.value
         # if the select the tail
-        if node is self.tail:
-            # remove it from the tail using the above meathod
-            self.remove_from_tail()
-        else:
-            # if its not head or tail, then delete that node
-            node.delete()
-            # and decrease the lentgth 
-            self.length -= 1
+        self.delete(node)
         # add the node to the head using above meathod
         self.add_to_head(value)
     """
@@ -141,7 +142,16 @@ class DoublyLinkedList:
     List and inserts it as the new tail node of the List.
     """
     def move_to_end(self, node):
-        pass
+
+        if node is self.tail:
+            return
+
+        value = node.value
+
+        self.delete(node)
+
+        self.add_to_tail(value)
+
 
     """
     Deletes the input node from the List, preserving the 
@@ -150,35 +160,30 @@ class DoublyLinkedList:
     def delete(self, node):
 
         #check if its empty 
+        self.length -= 1
         if not self.head and not self.tail:
             return
         
         #if theres only oone element
-        if self.head == self.tail:
+        if self.head is self.tail:
             self.head = None
             self.tail = None
-            self.length -= 1
 
         #if its the head
-        elif node == self.head:
-            current_head = self.head
-            self.head = current_head.next
-            self.length -= 1
+        elif node is self.head:
+            self.head = node.next
+            node.delete()
 
         # if its the tail
-        elif node == self.tail:
-            current_tail = self.tail
-            self.tail = current_tail.prev
-            self.length -= 1
-        
+        elif node is self.tail:
+            self.tail = node.prev
+            node.delete()
+
         #general case
         else:
-            current_next = node.next
-            current_prev = node.prev
+            node.delete()
 
-            current_prev.next = current_next
-
-            self.length -= 1
+            
 
 
 
@@ -187,4 +192,18 @@ class DoublyLinkedList:
     in the List.
     """
     def get_max(self):
-        pass
+        
+        if not self.head:
+            return None
+        
+        current = self.head
+        max_val = current.value
+
+
+        while current:
+            if current.value > max_val:
+                max_val = current.value
+            current = current.next        
+
+        return max_val
+
